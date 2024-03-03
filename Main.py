@@ -1,36 +1,74 @@
-import random
+from random import randint
 
-def spin_wheel():
-    return random.randint(1, 12)
+def display_welcome_banner():
+    welcome_banner = """
+                Welcome to Spin the Wheel game!
 
-def play_game():
-    user_score = 0
-    ai_score = 0
-
-    while user_score < 50 and ai_score < 50:
-        input("Press Enter to spin the wheel...")
+        - It is a wheel-spinning game.
         
-        user_guess = int(input("Enter your guess (1-12): "))
-        ai_guess = random.randint(1, 12)
+        - The wheel contains numbers from 1 to 12.
 
-        user_spin = spin_wheel()
-        ai_spin = spin_wheel()
+        - The game will be played in rounds between the computer and user.
+        
+        - Match the parity of the round number and spin number.
+        
+        - If the parity matches, the user gets one point.
+       
+        - Otherwise, the computer gets one point.
 
-        print(f"You spun {user_spin}, AI spun {ai_spin}")
+        - The game ends when one of the players reaches 50.
+    """
+    print(welcome_banner)
 
-        if user_spin == user_guess:
-            user_score += 1
-            print(f"Correct guess! You earned 1 point. Your score: {user_score}")
-        else:
-            print("Incorrect guess!")
+def get_spin_result():
+    return randint(1, 12)
 
-        if ai_spin == ai_guess:
-            ai_score += 5
-            print(f"AI made a correct guess! AI earned 1 point1. AI's score: {ai_score}")
-        else:
-            print("AI made an incorrect guess!")
+def is_even(number):
+    return number % 2 == 0
+
+def update_scores(user_score, computer_score, spin_result, round_number):
+    spin_parity = "even" if is_even(spin_result) else "odd"
+    
+    print(f"Round number: {round_number}")
+    print(f"You got: {spin_result}")
+    print(f"User Score: {user_score}")
+    print(f"Computer Score: {computer_score}")
+
+    if is_even(user_score) == is_even(spin_result):
+        user_score += 1
+        print(f"You scored! Spin result: {spin_result} ({spin_parity})")
+    else:
+        computer_score += 1
+        print(f"Computer scored! Spin result: {spin_result} ({spin_parity})")
+
+    print("-------------------------------------")
+
+    return user_score, computer_score
+
+def main():
+    display_welcome_banner()
+
+    user_name = input("Enter your name: ")
+
+    user_score = 0
+    computer_score = 0
+    round_number = 1
+    still_playing = True
+
+    while still_playing:
+        input("Spin the wheel (press enter): ")
+        spin_result = get_spin_result()
+        user_score, computer_score = update_scores(user_score, computer_score, spin_result, round_number)
+
+        round_number += 1
+
+        if user_score >= 50 or computer_score >= 50:
+            still_playing = False
 
     if user_score >= 50:
-        print("Congratulations! You won!")
+        print(f"Congratulations {user_name}! You won!")
     else:
-        print("AI won. Better luck next time.")
+        print("Computer won. Better luck next time!")
+
+if __name__ == "__main__":
+    main()
